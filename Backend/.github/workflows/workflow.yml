@@ -1,0 +1,85 @@
+# name: "Expense Tracker System"
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: "Environment to deploy to"
+#         required: true
+#         default: "staging"
+#         type: choice
+#         options: 
+#           - staging
+#           - production
+          
+#   push:
+#     branches: ["staging"]
+    
+#   pull_request:
+#     branches: ["main"]  
+
+# permissions:
+#   contents: write
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest   
+
+#     steps: 
+#       - name: Checkout code
+#         uses: actions/checkout@v4  
+#         with:
+#           fetch-depth: 0
+
+#       - name: Setup Node.js 20
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: "20" 
+
+#       - name: Cache NPM Dependencies
+#         uses: actions/cache@v3
+#         with:
+#           path: |
+#             ~/.npm
+#             node_modules
+#           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+#           restore-keys: |
+#             ${{ runner.os }}-npm-
+
+#       - name: Install Dependencies
+#         run: npm install --frozen-lockfile
+
+#       - name: Run Jest Test Cases
+#         run: npm test --ci --coverage
+#       # - name: Lint Check
+#       #   run: npm lint || echo "Lint warnings found"
+
+
+#   merge-to-main:
+#     needs: build   
+#     runs-on: ubuntu-latest
+#     if: success()
+
+#     steps: 
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#         with: 
+#           fetch-depth: 0
+#           ref: staging
+
+#       - name: Merge Staging into Main
+#         run: |
+#           git config --global user.name "github-actions[bot]"
+#           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+#           git fetch origin
+
+#           if ! git show-ref --quiet refs/remotes/origin/main; then
+#             git checkout -b main
+#             git push -u origin main
+#           else
+#             git checkout main
+#           fi
+
+#           git merge staging --no-ff -m "Auto-merged staging into main"
+#           git push origin main

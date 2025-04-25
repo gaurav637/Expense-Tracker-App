@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  mongodb:
+    image: 'mongo:latest'
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+  library-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: expense-tracker
+    ports:
+      - '8080:8080'
+    environment:
+      MONGO_URI: 'mongodb://mongodb:27017/ExpenseTracker'
+      PORT: 8080
+    depends_on:
+      - mongodb
