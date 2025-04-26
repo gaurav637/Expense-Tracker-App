@@ -11,30 +11,30 @@ on:
         options: 
           - staging
           - production
-          
+
   push:
     branches: ["staging"]
-    
+
   pull_request:
-    branches: ["main"]  
+    branches: ["main"]
 
 permissions:
   contents: write
 
 jobs:
   build:
-    runs-on: ubuntu-latest   
+    runs-on: ubuntu-latest
 
     steps: 
       - name: Checkout code
-        uses: actions/checkout@v4  
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: "20" 
+          node-version: "20"
 
       - name: Cache NPM Dependencies
         uses: actions/cache@v3
@@ -47,23 +47,24 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Install Dependencies
-        run: npm install --frozen-lockfile
+        run: npm ci
 
       - name: Run Jest Test Cases
         run: npm test --ci --coverage
-      # - name: Lint Check
-      #   run: npm lint || echo "Lint warnings found"
 
+      # Optional: Uncomment for lint check
+      # - name: Lint Check
+      #   run: npm run lint || echo "Lint warnings found"
 
   merge-to-main:
-    needs: build   
+    needs: build
     runs-on: ubuntu-latest
     if: success()
 
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
-        with: 
+        with:
           fetch-depth: 0
           ref: staging
 
@@ -71,7 +72,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
           git fetch origin
 
           if ! git show-ref --quiet refs/remotes/origin/main; then
