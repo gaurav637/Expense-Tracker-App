@@ -3,11 +3,13 @@ import express from 'express';
 import connectDB from './src/config/db.js';
 import bodyParser from 'body-parser';
 import logger from './src/utils/logger.js';
+import router from './src/routes/index.js';
 
 const app = express();
-
-dotenv.config();
 app.use(bodyParser.json());
+app.use(express.json());
+app.use("/api", router);
+dotenv.config();
 const PORT = process.env.PORT || 4040;
 const start = async ()=> {
     connectDB();
