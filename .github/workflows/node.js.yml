@@ -36,25 +36,21 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Cache NPM Dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+      - name: Install Backend Dependencies
+        working-directory: Backend
+        run: npm ci
 
-      - name: Install Dependencies
+      - name: Install Frontend Dependencies
+        working-directory: Frontend/expense-tracker-frontend
         run: npm ci
 
       #- name: Run Jest Test Cases
       #  run: npm test --ci --coverage
 
-      # Optional: Uncomment for lint check
-      # - name: Lint Check
-      #   run: npm run lint || echo "Lint warnings found"
+      # Optional: Add Frontend Test if available
+      # - name: Run Frontend Test Cases
+      #   working-directory: Frontend
+      #   run: npm test --ci --coverage
 
   merge-to-main:
     needs: build
@@ -73,13 +69,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
-
           if ! git show-ref --quiet refs/remotes/origin/main; then
             git checkout -b main
             git push -u origin main
           else
             git checkout main
           fi
-
           git merge staging --no-ff -m "Auto-merged staging into main"
           git push origin main
