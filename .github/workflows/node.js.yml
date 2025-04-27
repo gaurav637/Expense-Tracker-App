@@ -44,14 +44,6 @@ jobs:
         working-directory: Frontend/expense-tracker-frontend
         run: npm ci
 
-      #- name: Run Jest Test Cases
-      #  run: npm test --ci --coverage
-
-      # Optional: Add Frontend Test if available
-      # - name: Run Frontend Test Cases
-      #   working-directory: Frontend
-      #   run: npm test --ci --coverage
-
   merge-to-main:
     needs: build
     runs-on: ubuntu-latest
