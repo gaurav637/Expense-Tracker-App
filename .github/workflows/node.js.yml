@@ -44,6 +44,7 @@ jobs:
         working-directory: Frontend/expense-tracker-frontend
         run: npm ci
 
+
   merge-to-main:
     needs: build
     runs-on: ubuntu-latest
