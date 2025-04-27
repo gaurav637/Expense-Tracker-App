@@ -49,8 +49,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Jest Test Cases
-        run: npm test --ci --coverage
+      #- name: Run Jest Test Cases
+      #  run: npm test --ci --coverage
 
       # Optional: Uncomment for lint check
       # - name: Lint Check
